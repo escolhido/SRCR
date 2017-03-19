@@ -43,6 +43,17 @@ concat([X], X).
 concat([L | LS], R) :-
       concat(LS, N),
       junta(L, N, R).
+
+% unicos : List, List ->{V,F}
+unicos([], _).
+unicos([H | T],  R) :- pertence(H,R), unicos(T,R).
+unicos([H | T], [H | R]):- unicos(T,[H | R]).
+
+%pertence : Elemento, Lista ->{V,F}
+-pertence(_,[]).
+pertence(N,[N | _]).
+pertence(N,[_ | T]):-pertence(N,T).
+
 % ----------------------------------------------------------------------------------
 
 % sum : List,R -> {V,F}

@@ -12,20 +12,10 @@
 :- consult(invariantes).
 :- consult(bc).
 
-% Extensao do meta-predicado demo: Questao,Resposta -> {V,F}
-demo(Questao, verdadeiro) :-
-    Questao.
-demo(Questao, falso) :-
-    -Questao.
-demo(Questao, desconhecido) :-
-    nao(Questao),
-    nao(-Questao).
-
 % Extensao do meta-predicado nao: Questao -> {V,F}
 nao(Questao) :-
     Questao, !, fail.
 nao(_).
-
 
 % insere : Q -> {V,F}
 insere(Q) :- assert(Q).
@@ -66,11 +56,6 @@ involucao(Q) :-
      findall(I, -Q::I, L),
      testar(L),
      remove(Q).
-
-% remove(Q) :- retract(Q).
-% remove(Q) :- assert(Q), !, fail.
-
-
 
 % ========== FUNCIONALIDADES ============
 
@@ -167,7 +152,6 @@ atos_instituicao(In, Atos) :-
     maplist(getId, Servicos, Ss),
     maplist(atos_servico, Ss, As),
     concat(As, Atos).
-%    unicos(As, Atos).
 
 % Servicos de um utente
 servicos_utente(U, Servicos) :-

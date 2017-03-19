@@ -10,7 +10,7 @@
 :- dynamic ato/5.
 
 :- consult(invariantes).
-:- consult(populacao).
+:- consult(bc).
 
 % Extensao do meta-predicado demo: Questao,Resposta -> {V,F}
 demo(Questao, verdadeiro) :-

@@ -2,9 +2,10 @@
 
 :- ensure_loaded(main).
 
-:- op(500, xfy, '&&').
-:- op(500, xfy, 'ou').
-:- op(700, xfy, 'eq').
+:- op(900, xfy, '::').
+:- op(400, yfx, '&&').
+:- op(400, yfx, '$$').
+:- op(600, xfx, 'eq').
 
 :- dynamic (-)/1.
 
@@ -15,12 +16,12 @@ eq(desconhecido, &&(desconhecido, desconhecido)).
 eq(falso,        &&(falso, _)).
 eq(falso,        &&(_, falso)).
 
-eq(falso,        ou(falso,        falso)).
-eq(desconhecido, ou(desconhecido, falso)).
-eq(desconhecido, ou(falso,        desconhecido)).
-eq(desconhecido, ou(desconhecido, desconhecido)).
-eq(verdadeiro,   ou(verdadeiro, _)).
-eq(verdadeiro,   ou(_, verdadeiro)).
+eq(falso,        $$(falso,        falso)).
+eq(desconhecido, $$(desconhecido, falso)).
+eq(desconhecido, $$(falso,        desconhecido)).
+eq(desconhecido, $$(desconhecido, desconhecido)).
+eq(verdadeiro,   $$(verdadeiro, _)).
+eq(verdadeiro,   $$(_, verdadeiro)).
 
 % demo : Q -> {V, F, D}
 demo(Q, verdadeiro)
@@ -49,12 +50,13 @@ and([Q|Qs], R) :- and(Qs, Rs), R eq Q && Rs.
 
 % or : Qs -> {V,F,R}
 or([], falso).
-or([Q|Qs], R) :- or(Qs, Rs), R eq Q ou Rs.
+or([Q|Qs], R) :- or(Qs, Rs), R eq Q $$ Rs.
 
 % evolucao : Q -> {V, F}
-evolucao(Q) :- findall(Inv, +Q::Inv, S),
-               inserir(Q),
-               testar(S).
+evolucao(Q) :-
+    findall(Inv, +Q::Inv, S),
+    inserir(Q),
+    testar(S).
 
 % inserir : Q -> {V,F}
 inserir(Q) :- assert(Q).
@@ -63,4 +65,3 @@ inserir(Q) :- retract(Q).
 % testar : List -> {V,F}
 testar([]).
 testar([Q|Qs]) :- Q, testar(Qs).
-

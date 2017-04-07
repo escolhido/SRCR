@@ -35,11 +35,11 @@ excecao( utente(11, _, Idade, _) )
 nulo(ut05_nome).
 nulo(ut05_morada).
 
-+utente(Id, Nome, Idade, Morada)
-    :: (findall((Id, Nome, Idade, Morada),
++utente(Id, Nome, Idade, Morada) :: (
+        findall((Id, Nome, Idade, Morada),
                 (utente(5, Nome, Idade, Morada), nao(nulo(Nome)), nao(nulo(Morada))),
-                 S),
-        length(S, 0)).
+                 [])
+        ).
 
 % servico : #IdServ, Descrição, Instituição, Cidade -> {V,F,D}
 servico(1,  "Oftaumologia"      , "Santa Maria"                , "Braga"      ).
@@ -73,16 +73,16 @@ excecao( (data(4, Dia, _, _) )
        Dia =< Max.
 
 % ato : Data, IdUt, IdServ, Custo -> {V,F, D}
-ato(1,  1,  1, 0).
-ato(2,  1,  1, 10).
-ato(3,  2,  2, 15).
-ato(4,  8,  2, 23).
-ato(5,  2,  5, 16).
-ato(6,  3,  4, 20).
-ato(7,  4,  3, 10).
-ato(8,  5,  9, 35).
-ato(9,  7, 12, 26).
-ato(10, 6, 10, 16).
-ato(11, 7,  9, 10).
-ato(11, 8,  7, 12).
-ato(11, 8,  7, 12).
+ato(1,  1,  1, ato01_custo).
+ato(2,  1,  1, 10         ).
+ato(3,  2,  2, 15         ).
+ato(4,  8,  2, 23         ).
+ato(5,  2,  5, 16         ).
+ato(6,  3,  4, 20         ).
+ato(7,  4,  3, 10         ).
+ato(8,  5,  9, 35         ).
+ato(9,  7, 12, 26         ).
+ato(10, 6, 10, 16         ).
+ato(11, 7,  9, 10         ).
+ato(11, 8,  7, 12         ).
+ato(11, 8,  7, 12         ).

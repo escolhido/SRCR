@@ -8,6 +8,7 @@
 
 :- consult(meta).
 :- consult(conhecimento).
+:- consult(invariantes).
 
 %
 % EXTENSÃO DOS PREDICADOS

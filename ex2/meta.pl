@@ -60,7 +60,7 @@ evolucao(Q) :-
 
 % inserir : Q -> {V,F}
 inserir(Q) :- assert(Q).
-inserir(Q) :- retract(Q).
+inserir(Q) :- retract(Q), !, fail.
 
 % testar : List -> {V,F}
 testar([]).

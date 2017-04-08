@@ -2,6 +2,8 @@
 
 :- style_check(-discontiguous).
 
+:- op(900, xfy, '::').
+
 :- dynamic utente/4.
 :- dynamic ato/4.
 :- dynamic servico/4.
@@ -31,12 +33,12 @@
 
 % data : Id, Dia, Mes, Ano -> {V, F, D}
 -data(Id, Dia, Mes, Ano)
-    :- nao (data(Dia, Mes, Ano),
-       nao( excecao( data(Dia, Mes, Ano) ) ).
+    :- nao( data(Id, Dia, Mes, Ano) ),
+       nao( excecao( data(Id, Dia, Mes, Ano) ) ).
 
 valid_data(_, Dia, Mes, _)
-    :- Dia > 0, Dia <= 31,
-       Mes > 0, Mes <= 12.
+    :- Dia > 0, Dia =< 31,
+       Mes > 0, Mes =< 12.
 
 %
 % PREDICADOS AUXILIARES
@@ -51,5 +53,5 @@ cerca_de(X, Min, Max)
        Max is X * 1.2.
 
 quinzena(X, Min, Max)
-    :- Min is (X-1) * 15 + 1
-       Max is X * 15
+    :- Min is (X-1) * 15 + 1,
+       Max is X * 15.

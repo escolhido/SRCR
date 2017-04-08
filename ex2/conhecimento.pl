@@ -67,7 +67,7 @@ data(9,  4,        9,  2016).
 data(10, 25,       1,  2017).
 data(11, 28,       2,  2017).
 
-excecao( (data(4, Dia, _, _) )
+excecao( data(4, Dia, _, _) )
     :- quinzena(1, Min, Max),
        Dia >= Min,
        Dia =< Max.

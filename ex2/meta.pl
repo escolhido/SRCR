@@ -2,7 +2,6 @@
 
 :- ensure_loaded(main).
 
-:- op(900, xfy, '::').
 :- op(400, yfx, '&&').
 :- op(400, yfx, '$$').
 :- op(600, xfx, 'eq').

@@ -35,11 +35,11 @@ excecao( utente(11, _, Idade, _) )
 nulo(ut05_nome).
 nulo(ut05_morada).
 
-+utente(Id, Nome, Idade, Morada) :: (
-        findall((Id, Nome, Idade, Morada),
-                (utente(5, Nome, Idade, Morada), nao(nulo(Nome)), nao(nulo(Morada))),
-                 [])
-        ).
++utente(_, Nome, _, _) :: (
+        findall(Nome, (utente(5, Nome, _, _), nao(nulo(Nome))), [])).
+
++utente(_, _, _, Morada) :: (
+        findall(Morada, (utente(5, _, _, Morada), nao(nulo(Morada))), [])).
 
 % servico : #IdServ, Descrição, Instituição, Cidade -> {V,F,D}
 servico(1,  "Oftaumologia"      , "Santa Maria"                , "Braga"      ).

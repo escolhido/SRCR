@@ -57,10 +57,26 @@ evolucao(Q) :-
     inserir(Q),
     testar(S).
 
+% involucao : Q -> {V,F}
+involucao(Q) :-
+     findall(I, -Q::I, L),
+     testar(L),
+     remove(Q).
+
 % inserir : Q -> {V,F}
 inserir(Q) :- assert(Q).
 inserir(Q) :- retract(Q), !, fail.
 
+% remove : Q -> {V,F}
+remove(Q) :- retract(Q).
+
 % testar : List -> {V,F}
 testar([]).
 testar([Q|Qs]) :- Q, testar(Qs).
+
+% utente_interdito((Id, Nome, Idade, Morada), Simbolo) :-
+%     assert( nulo(Simbolo) ),
+%     assert( +utente(Id, Nome, Idade, Morada) :: (
+%         findall((Id, Nome, Idade, Morada),
+%                 (utente(Id, Nome, Idade, Morada), nao( nulo(Simbolo) )),
+%                 []))).

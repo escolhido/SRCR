@@ -8,9 +8,9 @@
 :- dynamic ato/4.
 :- dynamic servico/4.
 
-:- consult(meta).
-:- consult(conhecimento).
-:- consult(invariantes).
+:- include(meta).
+:- include(conhecimento).
+:- include(invariantes).
 
 %
 % EXTENSÃO DOS PREDICADOS
@@ -35,6 +35,7 @@
 -data(Id, Dia, Mes, Ano)
     :- nao( data(Id, Dia, Mes, Ano) ),
        nao( excecao( data(Id, Dia, Mes, Ano) ) ).
+
 
 valid_data(_, Dia, Mes, _)
     :- Dia > 0, Dia =< 31,

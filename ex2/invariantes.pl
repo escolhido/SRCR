@@ -2,12 +2,6 @@
 
 :- ensure_loaded(main).
 
-
-+utente(Id, Nome, Idade, Morada) :: (
-        findall((Id, Nome, Idade, Morada),
-                (utente(5, Nome, Idade, Morada), nao(nulo(Nome)), nao(nulo(Morada))),
-                 [])
-        ).
 % O Id do utente é único
 +utente(Id, _, _, _) :: (
      findall(Id, (utente(Id, _, _, _)), L),
@@ -52,6 +46,10 @@
 +data(_, D, M, A) :: (
     findall((D, M, A), data(_, D, M, A), L),
     length(L, 1)).
+
+% Uma data tem um formata válido
++data(Id, D, M, A) :: (
+    valid_data(Id, D, M, A)).
 
 % ====== REMOÇÃO =======
 

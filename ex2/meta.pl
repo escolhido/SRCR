@@ -7,6 +7,11 @@
 :- op(600, xfx, 'eq').
 
 :- dynamic (-)/1.
+:- dynamic excecao/1.
+
+%
+% SISTEMA DE INFERÊNCIA
+%
 
 eq(verdadeiro,   &&(verdadeiro,   verdadeiro)).
 eq(desconhecido, &&(desconhecido, verdadeiro)).
@@ -51,6 +56,10 @@ and([Q|Qs], R) :- and(Qs, Rs), R eq Q && Rs.
 or([], falso).
 or([Q|Qs], R) :- or(Qs, Rs), R eq Q $$ Rs.
 
+%
+% EVOLUÇÃO DE CONHECIMENTO
+%
+
 % evolucao : Q -> {V, F}
 evolucao(Q) :-
     findall(Inv, +Q::Inv, S),
@@ -74,9 +83,93 @@ remove(Q) :- retract(Q).
 testar([]).
 testar([Q|Qs]) :- Q, testar(Qs).
 
-% utente_interdito((Id, Nome, Idade, Morada), Simbolo) :-
-%     assert( nulo(Simbolo) ),
-%     assert( +utente(Id, Nome, Idade, Morada) :: (
-%         findall((Id, Nome, Idade, Morada),
-%                 (utente(Id, Nome, Idade, Morada), nao( nulo(Simbolo) )),
-%                 []))).
+%
+% EVOLUÇÃO DE CONHECIMENTO IMPERFEITO
+%
+
+% Transformar conhecimento imperfeito desconhecido/impreciso em conhechimento perfeito
+conhecer_utente(nome, Id, Nome)
+    :- utente_id(Id, utente(Id, S, I, M)),
+       atom(S), nao( atom(Nome) ),
+       substituir(utente(Id, S, I, M), utente(Id, Nome, I, M)).
+conhecer_utente(idade, Id, Idade)
+    :- utente_id(Id, utente(Id, N, S, M)),
+       atom(S), nao( atom(Idade) ),
+       substituir(utente(Id, N, S, M), utente(Id, N, Idade, M)).
+conhecer_utente(morada, Id, Morada)
+    :- utente_id(Id, utente(Id, N, I, S)),
+       atom(S), nao( atom(Morada) ),
+       substituir(utente(Id, N, I, S), utente(Id, N, I, Morada)).
+
+conhecer_servico(descricao, Id, Descricao)
+    :- servico_id(Id, servico(Id, S, I, C)),
+       atom(S), nao( atom(Descricao) ),
+       substituir(servico(Id, S, I, C), servico(Id, Descricao, I, C)).
+conhecer_servico(instituicao, Id, Instituicao)
+    :- servico_id(Id, servico(Id, D, S, C)),
+       atom(S), nao( atom(Instituicao) ),
+       substituir(servico(Id, D, S, C), servico(Id, D, Instituicao, C)).
+conhecer_servico(cidade, Id, Cidade)
+    :- servico_id(Id, servico(Id, D, I, S)),
+       atom(S), nao( atom(Cidade) ),
+       substituir(servico(Id, D, I, S), servico(Id, D, I, Cidade)).
+
+conhecer_ato(data, Simbolo, Data)
+    :- findall(ato(Simbolo, U, S, C), ato(Simbolo, U, S, C), [A|_]),
+       atom(Simbolo), not( atom(Data) ),
+       substituir(A, ato(Data, U, S, C)).
+conhecer_ato(utente, Simbolo, Utente)
+    :- findall(ato(D, Simbolo, S, C), ato(D, Simbolo, S, C), [A|_]),
+       atom(Simbolo), not( atom(Utente) ),
+       substituir(A, ato(D, Utente, S, C)).
+conhecer_ato(servico, Simbolo, Servico)
+    :- findall(ato(D, U, Simbolo, C), ato(D, U, Simbolo, C), [A|_]),
+       atom(Simbolo), not( atom(Servico) ),
+       substituir(A, ato(D, U, Servico, C)).
+conhecer_ato(custo, Simbolo, Custo)
+    :- findall(ato(D, U, S, C), ato(D, U, S, C), [A|_]),
+       atom(Simbolo), not( atom(Custo) ),
+       substituir(A, ato(D, U, S, C)).
+
+conhecer_data(dia, Id, Dia)
+    :- data_id(Id, data(Id, S, M, A)),
+       atom(S), not( atom(Dia) ),
+       substituir(data(Id, S, M, A), data(Id, Dia, M, A)).
+conhecer_data(mes, Id, Mes)
+    :- data_id(Id, data(Id, D, S, A)),
+       atom(S), not( atom(Mes) ),
+       substituir(data(Id, D, S, A), data(Id, D, Mes, A)).
+conhecer_data(ano, Id, Ano)
+    :- data_id(Id, data(Id, D, M, Ano)),
+       atom(S), not( atom(Ano) ),
+       substituir(data(Id, D, M, S), data(Id, D, M, Ano)).
+
+% declarar conhecimento imperfeito desconhecido
+utente_desconhecido(Id, nome)
+    :- utente_id(Id, utente(_, N, _, _)), atom(N),
+       assert( excecao( utente(IdUt, _, I, M)) :- utente(IdUt, N, I, M) ).
+utente_desconhecido(Id, idade)
+    :- utente_id(Id, utente(_, _, I, _)), atom(I),
+       assert( excecao( utente(IdUt, N, _, M)) :- utente(IdUt, N, I, M) ).
+utente_desconhecido(Id, morada)
+    :- utente_id(Id, utente(_, _, _, M)), atom(M),
+       assert( excecao( utente(IdUt, N, I, _)) :- utente(IdUt, N, I, M) ).
+
+% declarar conhecimento imperfeito impreciso
+utente_desconhecido(Id, nome, Nome, Q)
+    :- utente_id(Id, utente(_, N, _, _)), atom(N),
+       assert( excecao( utente(IdUt, Nome, I, M)) :- (utente(IdUt, N, I, M), Q)).
+utente_desconhecido(Id, idade, Idade, Q)
+    :- utente_id(Id, utente(_, _, I, _)), atom(I),
+       assert( excecao( utente(IdUt, N, Idade, M)) :- (utente(IdUt, N, I, M), Q)).
+utente_desconhecido(Id, morada, Morada, Q)
+    :- utente_id(Id, utente(_, _, _, M)), atom(M),
+       assert( excecao( utente(IdUt, N, I, Morada)) :- (utente(IdUt, N, I, M), Q)).
+
+% declarar conhecimento imperfeito interdito
+utente_interdito(Id, nome)
+    :-
+
+% substituir : Old,New -> {V,F}
+substituir(Old, New) :- retract(Old), evolucao(New).
+substituir(Old, _)   :- assert(Old), !, fail.

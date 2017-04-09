@@ -92,6 +92,7 @@ conhecer_utente(nome, Id, Nome)
     :- utente_id(Id, utente(Id, S, I, M)),
        atom(S), nao( atom(Nome) ),
        substituir(utente(Id, S, I, M), utente(Id, Nome, I, M)).
+
 conhecer_utente(idade, Id, Idade)
     :- utente_id(Id, utente(Id, N, S, M)),
        atom(S), nao( atom(Idade) ),
@@ -167,8 +168,18 @@ utente_desconhecido(Id, morada, Morada, Q)
        assert( excecao( utente(IdUt, N, I, Morada)) :- (utente(IdUt, N, I, M), Q)).
 
 % declarar conhecimento imperfeito interdito
-utente_interdito(Id, nome)
-    :-
+utente_interdito(Id, nome, Nome, Q)
+    :- utente_id(Id, utente(_, N, _, _)), atom(N),
+       assert( nulo(N) ),
+       assert( +utente(_, Nome, _, _) :: (Q)).
+utente_interdito(Id, idade, Idade, Q)
+    :- utente_id(Id, utente(_, _, I, _)), atom(I),
+       assert( nulo(I) ),
+       assert( +utente(_, _, Idade, _) :: (Q)).
+utente_interdito(Id, morada, Morada, Q)
+    :- utente_id(Id, utente(_, _, _, M)), atom(M),
+       assert( nulo(M) ),
+       assert( +utente(_, _, _, Morada) :: (Q)).
 
 % substituir : Old,New -> {V,F}
 substituir(Old, New) :- retract(Old), evolucao(New).

@@ -60,6 +60,29 @@ or([Q|Qs], R) :- or(Qs, Rs), R eq Q $$ Rs.
 % EVOLUÇÃO DE CONHECIMENTO
 %
 
+%
+%%% Evolução de conhecimento perfeito
+% evolucao(utente(3, "Maria", 25, "St. Barbara")).
+%
+%%% Evolução de conhecimento imperfeito do tipo desconhecido
+% evolucao(utente(3, "Maria", ut03_idade, "St. Barbara)).
+% utente_desconhecido(3, idade).
+%
+%%% Evolução de conhecimento imperfeito do tipo impreciso
+% evolucao(utente(3, "Maria", ut03_idade, "St. Barbara)).
+% utente_desconhecido(3, idade, Idade, (Idade >= 50, Idade =< 70)).
+%
+%%% Evolução de conhecimento imperfeito do tipo interdito
+% evolucao(utente(3, nome, 30, "St. Barbara").
+% utente_interdito(3, nome, Nome,
+%                 (findall(Nome, (utente(3, Nome, _, _), nao(nulo(Nome))), []))).
+%
+%%% Evolução de conhecimento imperfeito desconhecido/impreciso para perfeito
+% evolucao(utente(3, "Maria", ut03_idade, "St. Barbara")).
+% utente_desconhecido(3, idade).
+%
+% utente_conhecido(idade, 3, 23).
+
 % evolucao : Q -> {V, F}
 evolucao(Q) :-
     findall(Inv, +Q::Inv, S),

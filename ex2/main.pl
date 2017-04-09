@@ -68,6 +68,16 @@ valid_data(_, Dia, Mes, _)
        Mes > 0, Mes =< 12.
 
 %
+% Funcionalidades
+%
+
+idade_media(R)
+    :- findall(Idade, (utente(_, _, Idade, _), integer(Idade)), L),
+       length(L, Comprimento),
+       sumlist(L, Soma),
+       R is Soma / Comprimento.
+
+%
 % PREDICADOS AUXILIARES
 %
 

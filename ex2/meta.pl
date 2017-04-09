@@ -115,7 +115,6 @@ conhecer_utente(nome, Id, Nome)
     :- utente_id(Id, utente(Id, S, I, M)),
        atom(S), nao( atom(Nome) ),
        substituir(utente(Id, S, I, M), utente(Id, Nome, I, M)).
-
 conhecer_utente(idade, Id, Idade)
     :- utente_id(Id, utente(Id, N, S, M)),
        atom(S), nao( atom(Idade) ),
@@ -170,14 +169,47 @@ conhecer_data(ano, Id, Ano)
 
 % declarar conhecimento imperfeito desconhecido
 utente_desconhecido(Id, nome)
-    :- utente_id(Id, utente(_, N, _, _)), atom(N),
+    :- utente_id(Id, utente(_, N, _, _) ), atom(N),
        assert( excecao( utente(IdUt, _, I, M)) :- utente(IdUt, N, I, M) ).
 utente_desconhecido(Id, idade)
-    :- utente_id(Id, utente(_, _, I, _)), atom(I),
+    :- utente_id(Id, utente(_, _, I, _) ), atom(I),
        assert( excecao( utente(IdUt, N, _, M)) :- utente(IdUt, N, I, M) ).
 utente_desconhecido(Id, morada)
-    :- utente_id(Id, utente(_, _, _, M)), atom(M),
+    :- utente_id(Id, utente(_, _, _, M) ), atom(M),
        assert( excecao( utente(IdUt, N, I, _)) :- utente(IdUt, N, I, M) ).
+
+servico_desconhecido(Id, descricao)
+    :- servico_id(Id, servico(_, D, _, _)), atom(D),
+       assert( excecao( servico(IdServ, _, I, C) ) :- servico(IdServ, D, I, C) ).
+servico_desconhecido(Id, instituicao)
+    :- servico_id(Id, servico(_, _, I, _)), atom(I),
+       assert( excecao( servico(IdServ, D, _, C) ) :- servico(IdServ, D, I, C) ).
+servico_desconhecido(Id, cidade)
+    :- servico_id(Id, servico(_, _, _, C)), atom(C),
+       assert( excecao( servico(IdServ, D, I, _) ) :- servico(IdServ, D, I, C) ).
+
+ato_desconhecido(Simbolo, data)
+    :- atom(Simbolo),
+       assert( excecao( ato(_, U, S, C) ) :- ato(Simbolo, U, S, C) ).
+ato_desconhecido(Simbolo, utente)
+    :- atom(Simbolo),
+       assert( excecao( ato(D, _, S, C) ) :- ato(D, Simbolo, S, C) ).
+ato_desconhecido(Simbolo, servico)
+    :- atom(Simbolo),
+       assert( excecao( ato(D, U, _, C) ) :- ato(D, U, Simbolo, C) ).
+ato_desconhecido(Simbolo, custo)
+    :- atom(Simbolo),
+       assert( excecao( ato(D, U, S, _) ) :- ato(D, U, S, Simbolo) ).
+
+data_desconhecida(Id, dia)
+    :- data_id(Id, data(_, D, _, _)), atom(D),
+       assert( excecao( data(Id, _, M, A) ) :- data(Id, D, M, A)).
+data_desconhecida(Id, mes)
+    :- data_id(Id, data(_, _, M, _)), atom(M),
+       assert( excecao( data(Id, D, _, A) ) :- data(Id, D, M, A)).
+data_desconhecida(Id, ano)
+    :- data_id(Id, data(_, _, _, A)), atom(A),
+       assert( excecao( data(Id, D, M, _) ) :- data(Id, D, M, A)).
 
 % declarar conhecimento imperfeito impreciso
 utente_desconhecido(Id, nome, Nome, Q)
@@ -189,6 +221,39 @@ utente_desconhecido(Id, idade, Idade, Q)
 utente_desconhecido(Id, morada, Morada, Q)
     :- utente_id(Id, utente(_, _, _, M)), atom(M),
        assert( excecao( utente(IdUt, N, I, Morada)) :- (utente(IdUt, N, I, M), Q)).
+
+servico_desconhecido(Id, descricao, Desc, Q)
+    :- servico_id(Id, servico(_, D, _, _)), atom(D),
+       assert( excecao( servico(IdServ, Desc, I, C) ) :- (servico(IdServ, D, I, C), Q)).
+servico_desconhecido(Id, instituicao, Inst, Q)
+    :- servico_id(Id, servico(_, _, I, _)), atom(I),
+       assert( excecao( servico(IdServ, D, Inst, C) ) :- (servico(IdServ, D, I, C), Q)).
+servico_desconhecido(Id, cidade, Cidade, Q)
+    :- servico_id(Id, servico(_, _, _, C)), atom(C),
+       assert( excecao( servico(IdServ, D, I, Cidade) ) :- (servico(IdServ, D, I, C),Q)).
+
+ato_desconhecido(Simbolo, data, Data, Q)
+    :- atom(Simbolo),
+       assert( excecao( ato(Data, U, S, C) ) :- (ato(Simbolo, U, S, C), Q)).
+ato_desconhecido(Simbolo, utente, Utente, Q)
+    :- atom(Simbolo),
+       assert( excecao( ato(D, Utente, S, C) ) :- (ato(D, Simbolo, S, C), Q)).
+ato_desconhecido(Simbolo, servico, Servico, Q)
+    :- atom(Simbolo),
+       assert( excecao( ato(D, U, Servico, C) ) :- (ato(D, U, Simbolo, C), Q)).
+ato_desconhecido(Simbolo, custo, Custo, Q)
+    :- atom(Simbolo),
+       assert( excecao( ato(D, U, S, Custo) ) :- (ato(D, U, S, Simbolo),Q)).
+
+data_desconhecida(Id, dia, Dia, Q)
+    :- data_id(Id, data(_, D, _, _)), atom(D),
+       assert( excecao( data(Id, Dia, M, A) ) :- (data(Id, D, M, A), Q)).
+data_desconhecida(Id, mes, Mes, Q)
+    :- data_id(Id, data(_, _, M, _)), atom(M),
+       assert( excecao( data(Id, D, Mes, A) ) :- (data(Id, D, M, A), Q)).
+data_desconhecida(Id, ano, Ano, Q)
+    :- data_id(Id, data(_, _, _, A)), atom(A),
+       assert( excecao( data(Id, D, M, Ano) ) :- (data(Id, D, M, A), Q)).
 
 % declarar conhecimento imperfeito interdito
 utente_interdito(Id, nome, Nome, Q)
@@ -203,6 +268,49 @@ utente_interdito(Id, morada, Morada, Q)
     :- utente_id(Id, utente(_, _, _, M)), atom(M),
        assert( nulo(M) ),
        assert( +utente(_, _, _, Morada) :: (Q)).
+
+servico_interdito(Id, descricao, Desc, Q)
+    :- servico_id(Id, servico(_, D, _, _)), atom(D),
+       assert( nulo(D) ),
+       assert( +servico(_, Desc, _, _) :: (Q)).
+servico_interdito(Id, instituicao, Inst, Q)
+    :- servico_id(Id, servico(_, _, I, _)), atom(I),
+       assert( nulo(I) ),
+       assert( +servico(_, _, Inst, _) :: (Q)).
+servico_interdito(Id, cidade, Cidade, Q)
+    :- servico_id(Id, servico(_, _, _, C)), atom(C),
+       assert( nulo(C) ),
+       assert( +servico(_, _, _, Cidade) :: (Q)).
+
+ato_interdito(Simbolo, data, Data, Q)
+    :- atom(Simbolo),
+       assert( nulo(Simbolo) ),
+       assert( +ato(Data, _, _, _) :: (Q)).
+ato_interdito(Simbolo, utente, Utente, Q)
+    :- atom(Simbolo),
+       assert( nulo(Simbolo) ),
+       assert( +ato(_, Utente, _, _) :: (Q)).
+ato_interdito(Simbolo, servico, Servico, Q)
+    :- atom(Simbolo),
+       assert( nulo(Simbolo) ),
+       assert( +ato(_, _, Servico, _) :: (Q)).
+ato_interdito(Simbolo, custo, Custo, Q)
+    :- atom(Simbolo),
+       assert( nulo(Simbolo) ),
+       assert( +ato(_, _, _, Custo) :: (Q)).
+
+data_interdita(Id, dia, Dia, Q)
+    :- data_id(Id, data(_, D, _, _)), atom(D),
+       assert( nulo(D) ),
+       assert( +data(_, Dia, _, _) :: (Q)).
+data_interdita(Id, mes, Mes, Q)
+    :- data_id(Id, data(_, _, M, _)), atom(M),
+       assert( nulo(M) ),
+       assert( +data(_, _, Mes, _) :: (Q)).
+data_interdita(Id, ano, Ano, Q)
+    :- data_id(Id, data(_, _, _, A)), atom(A),
+       assert( nulo(A) ),
+       assert( +data(_, _, _, Ano) :: (Q)).
 
 % substituir : Old,New -> {V,F}
 substituir(Old, New) :- retract(Old), evolucao(New).
